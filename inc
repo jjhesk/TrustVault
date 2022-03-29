@@ -116,7 +116,7 @@ linuxtools() {
 
 flaten(){
 cd ./vault
-solflatliner --o TetherTokenLZ.sol USDT/LayerZeroUSDT.sol 0.6.6
+solflatliner --o Enrockvault.sol enrock/Enrockvault.sol 0.6.12
 }
 
 build_abi_generation() {

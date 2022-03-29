@@ -1,4 +1,4 @@
-
+// SPDX-License-Identifier: MIT
 
 // From https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/ReentrancyGuard.sol
 // Subject to the MIT license.

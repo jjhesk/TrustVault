@@ -1,8 +1,8 @@
-
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: agpl-3.0
+pragma solidity ^0.6.12;
 
 import './Proxy.sol';
-import '../contracts/Address.sol';
+import './Address.sol';
 
 /**
  * @title BaseUpgradeabilityProxy

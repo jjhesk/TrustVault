@@ -1,9 +1,11 @@
 pragma solidity ^0.6.12;
 
-import "../vendor/v0.6/RoleIsland.sol";
-import "../vendor/v0.6/ReentrancyGuard.sol";
-import "../vendor/v0.6/SafeMath.sol";
-import "../vendor/v0.6/SafeERC20.sol";
+import {RoleIsland} from "../vendor/v0.6/RoleIsland.sol";
+import {ReentrancyGuard} from "../vendor/v0.6/ReentrancyGuard.sol";
+import {SafeMath, SafeMath16, SafeMath8} from "../vendor/v0.6/SafeMath.sol";
+import {SafeERC20} from "../vendor/v0.6/SafeERC20.sol";
+import {IERC20} from "../vendor/v0.6/IERC20.sol";
+import {Address} from "../vendor/v0.6/Address.sol";
 
 contract TestEnclose is RoleIsland {
     using SafeMath for uint256;
