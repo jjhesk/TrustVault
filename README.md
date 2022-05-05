@@ -21,3 +21,9 @@ FACTORY=
 ```
 
 Create a file named `node.txt` and enter the evm compiler IP address.
+
+### Sample code
+
+`demo_verify.py` the sample code for verification of the signature
+
+`deploy_h.py` the sample code for deployment

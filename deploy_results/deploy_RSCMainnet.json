@@ -1,0 +1,80 @@
+{
+  "Mine": "0x8844D7C5645FC436D80f2dCd9830F5CB88Ff96a4",
+  "PriceOracle": "0x8c4e85D4784c9e300EA556177bef3D28fD2a61f9",
+  "USDT": "0xAd08d31579dd599801e8839db70Bd9C84D2B98e9",
+  "Currency": "0xAd08d31579dd599801e8839db70Bd9C84D2B98e9",
+  "GenesisKey": "0xB03Ac52dE72B3948B96Fd8ce575D6434ab833B81",
+  "TimeLock6H": "0x29E21a61ad95a2e88951cdA442aDfF6c9E275cD7",
+  "kv_TimeLock6H": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "VrfConsumer": "0x36180b27ADf6977137aFF491773Aae1486314C15",
+  "kv_VrfConsumer": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "ChingToken": "0x79e93714E4049Ae8745F1FA21838d6FdfDCa9cA6",
+  "kv_ChingToken": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "Farm": "0xDda1411474a49d07A43E863E7D3eEa93b23bD641",
+  "kv_Farm": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "Genesis": "0x6Ab612071217E1d7d80176A7bA25dFaD15f69bB0",
+  "kv_Genesis": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "ReferralCola": "0x9c30d9bF40A37c9113eaFB686b654Ab6c997ba46",
+  "kv_ReferralCola": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "ReferralNetwork": "0xf2d2762F5c985Be86000b0dAac89d2aC5077B974",
+  "kv_ReferralNetwork": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "MarkSix": "0x77ef3ab2f9530f4c486BeB4Dab752Cf9D660427f",
+  "kv_MarkSix": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "HashOracle": "0x77bB814DEA6828F60AFDf528e3Db0B00Ceb080Ab",
+  "TestVRFx": "0x2d173405fb287a3A826F9f47B6ED0f55C451571e",
+  "kv_TestVRFx": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "MarkSixModel": "0x271762994D37D53FF8e4bbeE6A6A80814F68aB2e",
+  "kv_MarkSixModel": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "BatchTickets": "0x249d323b18b4f5E49761AFbf689d794B9C862F32",
+  "kv_BatchTickets": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "LAddressProvider": "0x0591BCFc07d9B54950539C1d8AbB9AE5097A0318",
+  "kv_LAddressProvider": {
+    "owner": "0x8a45b720cf7251921b114E5D49812f634742f85C"
+  },
+  "Enrockvault": "0x9e61fE4cb11cdD2d7564eD14A3e6868B4E9DF0Bb",
+  "kv_Enrockvault": {
+    "owner": "0xF4adebDEde39865bC76C6C1Af7Ceb74daeb524a7"
+  },
+  "YSL": "0x1Ff8477Dd18d45d0BA1af6B25DC6470b50A6762D",
+  "LSL": "0x8844D7C5645FC436D80f2dCd9830F5CB88Ff96a4",
+  "USDF": "0xAd08d31579dd599801e8839db70Bd9C84D2B98e9",
+  "CINK": "0x79e93714E4049Ae8745F1FA21838d6FdfDCa9cA6",
+  "USXXX": "0x45F056BC4e2dEaE17135fE9B0F1EaC613422664b",
+  "OCT": "0x4Ea5cc1A4A452FB1404a09aAE3D57B072076183f",
+  "EXR": "0xE58e072B507a0a4877FDfd5C34729C50a71ca1e6",
+  "BLCR": "0x9F93f0FB140f5dCbf3d1687adb1245c5acCE610d",
+  "VerifySignature": "0xdC9BbE206235b9E2649E38C519CB280407bF2940",
+  "kv_VerifySignature": {
+    "owner": "0xF4adebDEde39865bC76C6C1Af7Ceb74daeb524a7"
+  },
+  "VaultConfigProvider": "0x176D7Cd077bBA898c3E79643751A7b4A3d24fb5c",
+  "kv_VaultConfigProvider": {
+    "owner": "0xF4adebDEde39865bC76C6C1Af7Ceb74daeb524a7"
+  },
+  "TestEnclose": "0x4dC2009B77E894b75Fb6a58D8F54ec88c6bF7EE4",
+  "kv_TestEnclose": {
+    "owner": "0xF4adebDEde39865bC76C6C1Af7Ceb74daeb524a7"
+  }
+}

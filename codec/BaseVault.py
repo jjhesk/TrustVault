@@ -4,6 +4,7 @@ from codec.gen_py.enrockvault import Enrockvault
 from codec.gen_py.tc20 import Tc20
 from codec.gen_py.test_enclose import TestEnclose
 from codec.gen_py.vault_config_provider import VaultConfigProvider
+from codec.gen_py.verify_signature import VerifySignature
 
 from key import NETWORK
 
@@ -30,6 +31,11 @@ class TokenBase(ContractTool):
     def defineVaultConfigProvider(self) -> "TokenBase":
         self.vault_config_provider: VaultConfigProvider = VaultConfigProvider(self, self.getAddr("VaultConfigProvider"))
         self.vault_config_provider.CallAutoConf(self).CallDebug(True).CallContractWait(self.waitSec)
+        return self
+
+    def defineSignatureProvider(self) -> "TokenBase":
+        self.versign: VerifySignature = VerifySignature(self, self.getAddr("VerifySignature"))
+        self.versign.CallAutoConf(self).CallDebug(True).CallContractWait(self.waitSec)
         return self
 
 class BsVault(TokenBase):
