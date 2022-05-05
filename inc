@@ -112,11 +112,9 @@ linuxtools() {
   sudo yum install rsync
 }
 
-
-
-flaten(){
-cd ./vault
-solflatliner --o Enrockvault.sol enrock/Enrockvault.sol 0.6.12
+flaten() {
+  cd ./vault
+  solflatliner --o Enrockvault.sol enrock/Enrockvault.sol 0.6.12
 }
 
 build_abi_generation() {
@@ -149,7 +147,6 @@ EOF
   cd $BUILDPATH
   python3 -c "$_c"
 }
-
 
 build_contract_deploy() {
   # LayerZeroEndpoint
@@ -217,7 +214,6 @@ mactools() {
   # -----------------------------------------------
   python3 -m compileall .
 }
-
 
 endline() {
   cat remotesolc | ssh root@$LOCAL /bin/bash
@@ -328,6 +324,7 @@ backup_deploy() {
 }
 # Please setup your local path for local transpiling
 # LOCAL MACHINE ONLY the default path
-BUILDPATH="$HOME/Documents/b95/TrustVault/"
+BUILDPATH=$HOME/Documents/b95/TrustVault
 BUILD_DIR="$BUILDPATH/build"
 FACTORY=$HOME/Documents/piplines/factoryabi
+CONTRACTS_LOCAL="$BUILDPATH/deploy_results"

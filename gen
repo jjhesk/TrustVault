@@ -4,11 +4,11 @@ mactools
 LOCAL=$(cat node.txt)
 TARGET_LOC=/root/contracts
 #LOCAL PATHS
-CONTRACTS_LOCAL="$BUILDPATH/deploy_results"
+
 mkdir -p $CONTRACTS_LOCAL
 echo "rsync -avzP --delete $BUILDPATH/vault root@$LOCAL:$TARGET_LOC"
 rsync -avzP --delete $BUILDPATH/vault root@$LOCAL:$TARGET_LOC
-#python3 gen_class.py
+# python3 gen_class.py
 build_abi_generation
 endline
 #bash flatliner.sh

@@ -66,7 +66,7 @@ class DefaultAdminRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return Union[bytes, str](returned)
-    def block_send(self, _gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> Union[bytes, str]:
+    def block_send(self, _valeth:int=0) -> Union[bytes, str]:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -77,15 +77,15 @@ class DefaultAdminRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -95,33 +95,32 @@ class DefaultAdminRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("default_admin_role", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: default_admin_role")
-
+            message = f"Error {er}: default_admin_role"
+            self._on_fail("default_admin_role", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, default_admin_role: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, default_admin_role. Reason: Unknown")
 
+            self._on_fail("default_admin_role", message)
 
     def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -162,7 +161,7 @@ class AddWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, account: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -173,15 +172,15 @@ class AddWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -191,33 +190,32 @@ class AddWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("add_whitelist_admin", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: add_whitelist_admin")
-
+            message = f"Error {er}: add_whitelist_admin"
+            self._on_fail("add_whitelist_admin", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, add_whitelist_admin: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, add_whitelist_admin. Reason: Unknown")
 
+            self._on_fail("add_whitelist_admin", message)
 
     def send_transaction(self, account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -266,7 +264,7 @@ class GetAddressMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return str(returned)
-    def block_send(self, _id: Union[bytes, str],_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> str:
+    def block_send(self, _id: Union[bytes, str],_valeth:int=0) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -277,15 +275,15 @@ class GetAddressMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -295,33 +293,32 @@ class GetAddressMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("get_address", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: get_address")
-
+            message = f"Error {er}: get_address"
+            self._on_fail("get_address", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_address: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_address. Reason: Unknown")
 
+            self._on_fail("get_address", message)
 
     def send_transaction(self, _id: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -361,7 +358,7 @@ class GetGenesisMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return str(returned)
-    def block_send(self, _gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> str:
+    def block_send(self, _valeth:int=0) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -372,15 +369,15 @@ class GetGenesisMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -390,33 +387,32 @@ class GetGenesisMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("get_genesis", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: get_genesis")
-
+            message = f"Error {er}: get_genesis"
+            self._on_fail("get_genesis", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_genesis: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_genesis. Reason: Unknown")
 
+            self._on_fail("get_genesis", message)
 
     def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -462,7 +458,7 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return Union[bytes, str](returned)
-    def block_send(self, role: Union[bytes, str],_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> Union[bytes, str]:
+    def block_send(self, role: Union[bytes, str],_valeth:int=0) -> Union[bytes, str]:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -473,15 +469,15 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -491,33 +487,32 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("get_role_admin", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: get_role_admin")
-
+            message = f"Error {er}: get_role_admin"
+            self._on_fail("get_role_admin", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_role_admin: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_role_admin. Reason: Unknown")
 
+            self._on_fail("get_role_admin", message)
 
     def send_transaction(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -573,7 +568,7 @@ class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return str(returned)
-    def block_send(self, role: Union[bytes, str], index: int,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> str:
+    def block_send(self, role: Union[bytes, str], index: int,_valeth:int=0) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -584,15 +579,15 @@ class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -602,33 +597,32 @@ class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("get_role_member", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: get_role_member")
-
+            message = f"Error {er}: get_role_member"
+            self._on_fail("get_role_member", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_role_member: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_role_member. Reason: Unknown")
 
+            self._on_fail("get_role_member", message)
 
     def send_transaction(self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -677,7 +671,7 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return int(returned)
-    def block_send(self, role: Union[bytes, str],_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> int:
+    def block_send(self, role: Union[bytes, str],_valeth:int=0) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -688,15 +682,15 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -706,33 +700,32 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("get_role_member_count", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: get_role_member_count")
-
+            message = f"Error {er}: get_role_member_count"
+            self._on_fail("get_role_member_count", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_role_member_count: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, get_role_member_count. Reason: Unknown")
 
+            self._on_fail("get_role_member_count", message)
 
     def send_transaction(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -781,7 +774,7 @@ class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, role: Union[bytes, str], account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, role: Union[bytes, str], account: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -792,15 +785,15 @@ class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -810,33 +803,32 @@ class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("grant_role", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: grant_role")
-
+            message = f"Error {er}: grant_role"
+            self._on_fail("grant_role", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, grant_role: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, grant_role. Reason: Unknown")
 
+            self._on_fail("grant_role", message)
 
     def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -891,7 +883,7 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return bool(returned)
-    def block_send(self, role: Union[bytes, str], account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> bool:
+    def block_send(self, role: Union[bytes, str], account: str,_valeth:int=0) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -902,15 +894,15 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -920,33 +912,32 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("has_role", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: has_role")
-
+            message = f"Error {er}: has_role"
+            self._on_fail("has_role", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, has_role: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, has_role. Reason: Unknown")
 
+            self._on_fail("has_role", message)
 
     def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -986,7 +977,7 @@ class IsOwnerMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return bool(returned)
-    def block_send(self, _gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> bool:
+    def block_send(self, _valeth:int=0) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -997,15 +988,15 @@ class IsOwnerMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1015,33 +1006,32 @@ class IsOwnerMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("is_owner", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: is_owner")
-
+            message = f"Error {er}: is_owner"
+            self._on_fail("is_owner", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, is_owner: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, is_owner. Reason: Unknown")
 
+            self._on_fail("is_owner", message)
 
     def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1088,7 +1078,7 @@ class IsWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return bool(returned)
-    def block_send(self, account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> bool:
+    def block_send(self, account: str,_valeth:int=0) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1099,15 +1089,15 @@ class IsWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1117,33 +1107,32 @@ class IsWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("is_whitelist_admin", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: is_whitelist_admin")
-
+            message = f"Error {er}: is_whitelist_admin"
+            self._on_fail("is_whitelist_admin", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, is_whitelist_admin: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, is_whitelist_admin. Reason: Unknown")
 
+            self._on_fail("is_whitelist_admin", message)
 
     def send_transaction(self, account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1183,7 +1172,7 @@ class OwnerMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return str(returned)
-    def block_send(self, _gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> str:
+    def block_send(self, _valeth:int=0) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1194,15 +1183,15 @@ class OwnerMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1212,33 +1201,32 @@ class OwnerMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("owner", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: owner")
-
+            message = f"Error {er}: owner"
+            self._on_fail("owner", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, owner: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, owner. Reason: Unknown")
 
+            self._on_fail("owner", message)
 
     def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1279,7 +1267,7 @@ class RemoveWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, account: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1290,15 +1278,15 @@ class RemoveWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1308,33 +1296,32 @@ class RemoveWhitelistAdminMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("remove_whitelist_admin", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: remove_whitelist_admin")
-
+            message = f"Error {er}: remove_whitelist_admin"
+            self._on_fail("remove_whitelist_admin", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, remove_whitelist_admin: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, remove_whitelist_admin. Reason: Unknown")
 
+            self._on_fail("remove_whitelist_admin", message)
 
     def send_transaction(self, account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1368,7 +1355,7 @@ class RenounceOwnershipMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, _gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, _valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1379,15 +1366,15 @@ class RenounceOwnershipMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1397,33 +1384,32 @@ class RenounceOwnershipMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("renounce_ownership", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: renounce_ownership")
-
+            message = f"Error {er}: renounce_ownership"
+            self._on_fail("renounce_ownership", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, renounce_ownership: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, renounce_ownership. Reason: Unknown")
 
+            self._on_fail("renounce_ownership", message)
 
     def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1469,7 +1455,7 @@ class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, role: Union[bytes, str], account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, role: Union[bytes, str], account: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1480,15 +1466,15 @@ class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1498,33 +1484,32 @@ class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("renounce_role", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: renounce_role")
-
+            message = f"Error {er}: renounce_role"
+            self._on_fail("renounce_role", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, renounce_role: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, renounce_role. Reason: Unknown")
 
+            self._on_fail("renounce_role", message)
 
     def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1573,7 +1558,7 @@ class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, role: Union[bytes, str], account: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, role: Union[bytes, str], account: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1584,15 +1569,15 @@ class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1602,33 +1587,32 @@ class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("revoke_role", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: revoke_role")
-
+            message = f"Error {er}: revoke_role"
+            self._on_fail("revoke_role", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, revoke_role: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, revoke_role. Reason: Unknown")
 
+            self._on_fail("revoke_role", message)
 
     def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1672,7 +1656,7 @@ class SetGenesisMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, person: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, person: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1683,15 +1667,15 @@ class SetGenesisMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1701,33 +1685,32 @@ class SetGenesisMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("set_genesis", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: set_genesis")
-
+            message = f"Error {er}: set_genesis"
+            self._on_fail("set_genesis", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, set_genesis: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, set_genesis. Reason: Unknown")
 
+            self._on_fail("set_genesis", message)
 
     def send_transaction(self, person: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1771,7 +1754,7 @@ class TransferOwnershipMethod(ContractMethod): # pylint: disable=invalid-name
 
 
 
-    def block_send(self, new_owner: str,_gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> None:
+    def block_send(self, new_owner: str,_valeth:int=0) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1782,15 +1765,15 @@ class TransferOwnershipMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1800,33 +1783,32 @@ class TransferOwnershipMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("transfer_ownership", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: transfer_ownership")
-
+            message = f"Error {er}: transfer_ownership"
+            self._on_fail("transfer_ownership", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, transfer_ownership: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, transfer_ownership. Reason: Unknown")
 
+            self._on_fail("transfer_ownership", message)
 
     def send_transaction(self, new_owner: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1866,7 +1848,7 @@ class WhitelistAdminsMethod(ContractMethod): # pylint: disable=invalid-name
                 'from': self._operate
             })
         return Union[bytes, str](returned)
-    def block_send(self, _gaswei:int,_pricewei:int,_valeth:int=0,_debugtx: bool = False,_receipList: bool = False) -> Union[bytes, str]:
+    def block_send(self, _valeth:int=0) -> Union[bytes, str]:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1877,15 +1859,15 @@ class WhitelistAdminsMethod(ContractMethod): # pylint: disable=invalid-name
 
             _t = _fn.buildTransaction({
                 'from': self._operate,
-                'gas': _gaswei,
-                'gasPrice': _pricewei
+                'gas': self.gas_limit,
+                'gasPrice': self.gas_price_wei
             })
             _t['nonce'] = self._web3_eth.getTransactionCount(self._operate)
 
             if _valeth > 0:
                 _t['value'] = _valeth
 
-            if _debugtx:
+            if self.debug_method:
                 print(f"======== Signing ✅ by {self._operate}")
                 print(f"======== Transaction ✅ check")
                 print(_t)
@@ -1895,33 +1877,32 @@ class WhitelistAdminsMethod(ContractMethod): # pylint: disable=invalid-name
                 signed = self._web3_eth.account.sign_transaction(_t)
                 txHash = self._web3_eth.sendRawTransaction(signed.rawTransaction)
                 tx_receipt = None
-                if _receipList is True:
+                if self.auto_reciept is True:
                     print(f"======== awaiting Confirmation 🚸️ {self.sign}")
-                    tx_receipt = self._web3_eth.waitForTransactionReceipt(txHash)
-                    if _debugtx:
+                    tx_receipt = self._web3_eth.wait_for_transaction_receipt(txHash)
+                    if self.debug_method:
                         print("======== TX Result ✅")
                         print(tx_receipt)
 
-                print(f"======== TX blockHash ✅")
-                if tx_receipt is not None:
-                    print(f"{Bolors.OK}{tx_receipt.blockHash.hex()}{Bolors.RESET}")
-                else:
-                    print(f"{Bolors.WARNING}{txHash.hex()}{Bolors.RESET} - broadcast hash")
+                self._on_receipt_handle("whitelist_admins", tx_receipt, txHash)
 
-            if _receipList is False:
+            if self.auto_reciept is False:
                 time.sleep(self._wait)
 
 
         except ContractLogicError as er:
             print(f"{Bolors.FAIL}Error {er} {Bolors.RESET}: whitelist_admins")
-
+            message = f"Error {er}: whitelist_admins"
+            self._on_fail("whitelist_admins", message)
         except ValueError as err:
             if "message" in err.args[0]:
                 message = err.args[0]["message"]
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, whitelist_admins: {message}")
             else:
+                message = "Error Revert , Reason: Unknown"
                 print(f"{Bolors.FAIL}Error Revert {Bolors.RESET}, whitelist_admins. Reason: Unknown")
 
+            self._on_fail("whitelist_admins", message)
 
     def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -2096,8 +2077,7 @@ class VaultConfigProvider(ContractBase):
         """Get an instance of wrapper for smart contract.
         """
         # pylint: disable=too-many-statements
-        super().__init__()
-        self.contract_address = contract_address
+        super().__init__(contract_address, VaultConfigProvider.abi())
         web3 = core_lib.w3
 
         if not validator:
@@ -2123,9 +2103,9 @@ class VaultConfigProvider(ContractBase):
 
         self._web3_eth = web3.eth
         functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=VaultConfigProvider.abi()).functions
-        signed = SignatureGenerator(VaultConfigProvider.abi())
-        validator.bindSignatures(signed)
-        self.SIGNATURES = signed
+        self._signatures = SignatureGenerator(VaultConfigProvider.abi())
+        validator.bindSignatures(self._signatures)
+
         self._fn_default_admin_role = DefaultAdminRoleMethod(core_lib, contract_address, functions.DEFAULT_ADMIN_ROLE, validator)
         self._fn_add_whitelist_admin = AddWhitelistAdminMethod(core_lib, contract_address, functions.addWhitelistAdmin, validator)
         self._fn_get_address = GetAddressMethod(core_lib, contract_address, functions.getAddress, validator)
@@ -2203,9 +2183,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of default_admin_role in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_default_admin_role.callback_onfail = self._callback_onfail
+        self._fn_default_admin_role.callback_onsuccess = self._callback_onsuccess
+        self._fn_default_admin_role.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_default_admin_role.gas_limit = self.call_contract_fee_amount
+        self._fn_default_admin_role.gas_price_wei = self.call_contract_fee_price
+        self._fn_default_admin_role.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2220,11 +2206,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of add_whitelist_admin in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_add_whitelist_admin.block_send(account, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_add_whitelist_admin.callback_onfail = self._callback_onfail
+        self._fn_add_whitelist_admin.callback_onsuccess = self._callback_onsuccess
+        self._fn_add_whitelist_admin.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_add_whitelist_admin.gas_limit = self.call_contract_fee_amount
+        self._fn_add_whitelist_admin.gas_price_wei = self.call_contract_fee_price
+        self._fn_add_whitelist_admin.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_add_whitelist_admin.block_send(account)
     
     
     
@@ -2237,9 +2229,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of get_address in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_get_address.callback_onfail = self._callback_onfail
+        self._fn_get_address.callback_onsuccess = self._callback_onsuccess
+        self._fn_get_address.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_get_address.gas_limit = self.call_contract_fee_amount
+        self._fn_get_address.gas_price_wei = self.call_contract_fee_price
+        self._fn_get_address.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2254,9 +2252,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of get_genesis in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_get_genesis.callback_onfail = self._callback_onfail
+        self._fn_get_genesis.callback_onsuccess = self._callback_onsuccess
+        self._fn_get_genesis.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_get_genesis.gas_limit = self.call_contract_fee_amount
+        self._fn_get_genesis.gas_price_wei = self.call_contract_fee_price
+        self._fn_get_genesis.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2271,9 +2275,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of get_role_admin in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_get_role_admin.callback_onfail = self._callback_onfail
+        self._fn_get_role_admin.callback_onsuccess = self._callback_onsuccess
+        self._fn_get_role_admin.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_get_role_admin.gas_limit = self.call_contract_fee_amount
+        self._fn_get_role_admin.gas_price_wei = self.call_contract_fee_price
+        self._fn_get_role_admin.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2288,9 +2298,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of get_role_member in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_get_role_member.callback_onfail = self._callback_onfail
+        self._fn_get_role_member.callback_onsuccess = self._callback_onsuccess
+        self._fn_get_role_member.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_get_role_member.gas_limit = self.call_contract_fee_amount
+        self._fn_get_role_member.gas_price_wei = self.call_contract_fee_price
+        self._fn_get_role_member.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2305,9 +2321,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of get_role_member_count in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_get_role_member_count.callback_onfail = self._callback_onfail
+        self._fn_get_role_member_count.callback_onsuccess = self._callback_onsuccess
+        self._fn_get_role_member_count.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_get_role_member_count.gas_limit = self.call_contract_fee_amount
+        self._fn_get_role_member_count.gas_price_wei = self.call_contract_fee_price
+        self._fn_get_role_member_count.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2322,11 +2344,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of grant_role in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_grant_role.block_send(role, account, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_grant_role.callback_onfail = self._callback_onfail
+        self._fn_grant_role.callback_onsuccess = self._callback_onsuccess
+        self._fn_grant_role.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_grant_role.gas_limit = self.call_contract_fee_amount
+        self._fn_grant_role.gas_price_wei = self.call_contract_fee_price
+        self._fn_grant_role.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_grant_role.block_send(role, account)
     
     
     
@@ -2339,9 +2367,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of has_role in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_has_role.callback_onfail = self._callback_onfail
+        self._fn_has_role.callback_onsuccess = self._callback_onsuccess
+        self._fn_has_role.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_has_role.gas_limit = self.call_contract_fee_amount
+        self._fn_has_role.gas_price_wei = self.call_contract_fee_price
+        self._fn_has_role.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2356,9 +2390,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of is_owner in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_is_owner.callback_onfail = self._callback_onfail
+        self._fn_is_owner.callback_onsuccess = self._callback_onsuccess
+        self._fn_is_owner.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_is_owner.gas_limit = self.call_contract_fee_amount
+        self._fn_is_owner.gas_price_wei = self.call_contract_fee_price
+        self._fn_is_owner.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2373,9 +2413,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of is_whitelist_admin in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_is_whitelist_admin.callback_onfail = self._callback_onfail
+        self._fn_is_whitelist_admin.callback_onsuccess = self._callback_onsuccess
+        self._fn_is_whitelist_admin.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_is_whitelist_admin.gas_limit = self.call_contract_fee_amount
+        self._fn_is_whitelist_admin.gas_price_wei = self.call_contract_fee_price
+        self._fn_is_whitelist_admin.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2390,9 +2436,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of owner in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_owner.callback_onfail = self._callback_onfail
+        self._fn_owner.callback_onsuccess = self._callback_onsuccess
+        self._fn_owner.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_owner.gas_limit = self.call_contract_fee_amount
+        self._fn_owner.gas_price_wei = self.call_contract_fee_price
+        self._fn_owner.debug_method = self.call_contract_debug_flag
+    
     
     
     
@@ -2407,11 +2459,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of remove_whitelist_admin in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_remove_whitelist_admin.block_send(account, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_remove_whitelist_admin.callback_onfail = self._callback_onfail
+        self._fn_remove_whitelist_admin.callback_onsuccess = self._callback_onsuccess
+        self._fn_remove_whitelist_admin.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_remove_whitelist_admin.gas_limit = self.call_contract_fee_amount
+        self._fn_remove_whitelist_admin.gas_price_wei = self.call_contract_fee_price
+        self._fn_remove_whitelist_admin.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_remove_whitelist_admin.block_send(account)
     
     
     
@@ -2424,11 +2482,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of renounce_ownership in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_renounce_ownership.block_send(self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_renounce_ownership.callback_onfail = self._callback_onfail
+        self._fn_renounce_ownership.callback_onsuccess = self._callback_onsuccess
+        self._fn_renounce_ownership.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_renounce_ownership.gas_limit = self.call_contract_fee_amount
+        self._fn_renounce_ownership.gas_price_wei = self.call_contract_fee_price
+        self._fn_renounce_ownership.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_renounce_ownership.block_send()
     
     
     
@@ -2441,11 +2505,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of renounce_role in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_renounce_role.block_send(role, account, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_renounce_role.callback_onfail = self._callback_onfail
+        self._fn_renounce_role.callback_onsuccess = self._callback_onsuccess
+        self._fn_renounce_role.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_renounce_role.gas_limit = self.call_contract_fee_amount
+        self._fn_renounce_role.gas_price_wei = self.call_contract_fee_price
+        self._fn_renounce_role.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_renounce_role.block_send(role, account)
     
     
     
@@ -2458,11 +2528,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of revoke_role in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_revoke_role.block_send(role, account, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_revoke_role.callback_onfail = self._callback_onfail
+        self._fn_revoke_role.callback_onsuccess = self._callback_onsuccess
+        self._fn_revoke_role.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_revoke_role.gas_limit = self.call_contract_fee_amount
+        self._fn_revoke_role.gas_price_wei = self.call_contract_fee_price
+        self._fn_revoke_role.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_revoke_role.block_send(role, account)
     
     
     
@@ -2475,11 +2551,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of set_genesis in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_set_genesis.block_send(person, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_set_genesis.callback_onfail = self._callback_onfail
+        self._fn_set_genesis.callback_onsuccess = self._callback_onsuccess
+        self._fn_set_genesis.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_set_genesis.gas_limit = self.call_contract_fee_amount
+        self._fn_set_genesis.gas_price_wei = self.call_contract_fee_price
+        self._fn_set_genesis.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_set_genesis.block_send(person)
     
     
     
@@ -2492,11 +2574,17 @@ class VaultConfigProvider(ContractBase):
         Implementation of transfer_ownership in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
     
-        return self._fn_transfer_ownership.block_send(new_owner, self.call_contract_fee_amount,self.call_contract_fee_price,0,self.call_contract_debug_flag, self.call_contract_enforce_tx_receipt)
+        self._fn_transfer_ownership.callback_onfail = self._callback_onfail
+        self._fn_transfer_ownership.callback_onsuccess = self._callback_onsuccess
+        self._fn_transfer_ownership.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_transfer_ownership.gas_limit = self.call_contract_fee_amount
+        self._fn_transfer_ownership.gas_price_wei = self.call_contract_fee_price
+        self._fn_transfer_ownership.debug_method = self.call_contract_debug_flag
+    
+    
+        return self._fn_transfer_ownership.block_send(new_owner)
     
     
     
@@ -2509,9 +2597,15 @@ class VaultConfigProvider(ContractBase):
         Implementation of whitelist_admins in contract VaultConfigProvider
         Method of the function
     
-    
-    
         """
+    
+        self._fn_whitelist_admins.callback_onfail = self._callback_onfail
+        self._fn_whitelist_admins.callback_onsuccess = self._callback_onsuccess
+        self._fn_whitelist_admins.auto_reciept = self.call_contract_enforce_tx_receipt
+        self._fn_whitelist_admins.gas_limit = self.call_contract_fee_amount
+        self._fn_whitelist_admins.gas_price_wei = self.call_contract_fee_price
+        self._fn_whitelist_admins.debug_method = self.call_contract_debug_flag
+    
     
     
     
