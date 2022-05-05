@@ -128,18 +128,21 @@ from moody import conf, Evm
 from moody.libeb import MiliDoS
 
 NETWORK = conf.RSCMainnet()
-SOLV = "0.6.12"
+# SOLV = "0.6.12"
+SOLV = "0.8.12"
 CONTRACT_LIST = [
     "vault/enrock/TestEnclose.sol",
     "vault/enrock/Enrockvault.sol",
     "vault/enrock/VaultConfigProvider.sol"
 ]
-
+CONT2 = [
+ "vault/enrock/VerifySignature.sol"
+]
 dos = MiliDoS(NETWORK)
 print("-----> to verify this sale now")
 print("$BUILDPATH")
 print("-----> this is the end of the path")
-dos.setWorkspace("$BUILDPATH").setClassSolNames(CONTRACT_LIST).setEvm(Evm.ISTANBUL).remoteCompile(SOLV).localTranspile()
+dos.setWorkspace("$BUILDPATH").setClassSolNames(CONT2).setEvm(Evm.ISTANBUL).remoteCompile(SOLV).localTranspile()
 
 
 EOF
